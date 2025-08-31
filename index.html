@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast Showcase 2099</title>
+<style>
+  /* Base */
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Orbitron', sans-serif; }
+  body { background:#0b0c10; color:#c5c6c7; overflow-x:hidden; }
+
+  /* Neon fonts & glow */
+  h1,h2,h3 { color:#66fcf1; text-shadow:0 0 10px #66fcf1, 0 0 20px #45a29e; }
+  p { color:#c5c6c7; }
+
+  /* Navbar */
+  nav {
+    display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem;
+    background:#1f2833; border-bottom:1px solid #45a29e; box-shadow:0 0 15px #45a29e33;
+    position:sticky; top:0; z-index:1000;
+  }
+  nav .logo { font-size:1.8rem; color:#66fcf1; letter-spacing:2px; }
+  nav ul { display:flex; gap:2rem; list-style:none; }
+  nav ul li a {
+    color:#c5c6c7; text-transform:uppercase; font-weight:700;
+    transition:0.3s; cursor:pointer;
+  }
+  nav ul li a:hover { color:#66fcf1; text-shadow:0 0 5px #66fcf1; }
+
+  /* Pages */
+  .page { display:none; padding:3rem 2rem; max-width:1400px; margin:auto; }
+  .active { display:block; }
+
+  /* Header */
+  header { text-align:center; margin-bottom:3rem; }
+  header h1 { font-size:3rem; margin-bottom:1rem; }
+  header p { font-size:1.2rem; color:#45a29e; }
+
+  /* Video Grid */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:2rem; }
+  .video-card {
+    background:#1f2833; border-radius:15px; overflow:hidden;
+    border:2px solid #45a29e33; box-shadow:0 0 15px #66fcf1;
+    transition:transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .video-card:hover {
+    transform:translateY(-10px) scale(1.02);
+    box-shadow:0 0 25px #66fcf1, 0 0 50px #45a29e;
+    border-color:#66fcf1;
+  }
+  iframe { width:100%; height:200px; border:none; }
+  .title { padding:1rem; font-size:1.1rem; font-weight:700; color:#66fcf1; text-align:center; }
+
+  /* Updates Page */
+  #updates h2 { font-size:2.5rem; margin-bottom:1rem; text-align:center; }
+  #updates p { font-size:1.1rem; text-align:center; margin-bottom:1rem; }
+  .email {
+    display:block; text-align:center; margin:auto; padding:0.8rem 1.5rem;
+    border-radius:10px; color:#0b0c10; background:#66fcf1;
+    font-weight:700; width:fit-content; box-shadow:0 0 15px #66fcf1;
+  }
+
+  /* Footer */
+  footer { background:#1f2833; color:#45a29e; text-align:center; padding:1.5rem; margin-top:3rem; }
+
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">PODCAST 2099</div>
+  <ul>
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('updates')">Updates</a></li>
+  </ul>
+</nav>
+
+<!-- Home Page -->
+<section id="home" class="page active">
+  <header>
+    <h1>Welcome to the Future of Podcasts</h1>
+    <p>Explore curated podcasts with a futuristic 2099 design</p>
+  </header>
+
+  <div class="grid" id="videoGrid"></div>
+</section>
+
+<!-- Updates Page -->
+<section id="updates" class="page">
+  <h2>Coming Updates</h2>
+  <p>Exciting new features and futuristic podcast experiences are coming soon.</p>
+  <p>Request specific updates or edits:</p>
+  <div class="email">podcastshowcaser@gmail.com</div>
+</section>
+
+
+<script>
+  // Page switching
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // Videos with full URLs
+const videoLinks = [
+  "https://youtu.be/ZF8YiXKYUBg?si=Awowo2PypRNvzHPv",
+  "https://youtu.be/9bZkp7q19f0",
+  "https://www.youtube.com/embed/3JZ_D3ELwOQ",
+  "https://youtu.be/SwQhKFMxmDY?si=6PA3rOtsp33wUqWZ",
+  "https://youtu.be/tool-R8VJ2Y?si=u4v3nuQa3NBb7cq-",
+  "https://youtu.be/l4CVdnK8stE?si=oG34aSyVfa3yuvmS",
+  "https://youtu.be/0Sf7lyVKOq4?si=ed8uOMarOV6xgg7e",
+  "https://youtu.be/sYj0exUT_Mw?si=rnUw3D6WsuhcXD8Z",
+  "https://youtu.be/31wjVhCcI5Y?si=xOL_AeYhI36zns0i",
+
+];
+
+// Generate videos automatically with titles Podcast 1, 2, 3...
+const videos = videoLinks.map((url, index) => ({
+  title: `Podcast ${index + 1}`,
+  url: url
+}));
+
+
+  function getYouTubeID(url) {
+    const regex = /(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  }
+
+  const grid = document.getElementById('videoGrid');
+  videos.forEach(v=>{
+    const id = getYouTubeID(v.url);
+    if(id){
+      const card = document.createElement('div');
+      card.className='video-card';
+      card.innerHTML=`
+        <iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+        <div class="title">${v.title}</div>
+      `;
+      grid.appendChild(card);
+    }
+  });
+</script>
+<footer>&copy; 2099 Podcast Showcase. All rights reserved.</footer>
+</body>
+</html>
